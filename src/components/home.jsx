@@ -18,6 +18,9 @@ import { Container } from "../theme/helpers";
 import { ReactComponent as EditSvg } from "../images/edit.svg";
 import { ReactComponent as DeleteSvg } from "../images/delete.svg";
 import { ReactComponent as ArrowRightSvg } from "../images/arrow-right.svg";
+import { ReactComponent as ConfirmSvg } from "../images/confirm.svg";
+import { ReactComponent as CancelSvg } from "../images/cancel.svg";
+import { EditTopic } from "./edits/edit-topic";
 
 const TopicsContainer = styled.div`
   display: flex;
@@ -74,12 +77,25 @@ const SvgsContainer = styled.div`
   }
 `;
 
+const EditButtons = styled.div`
+  display: flex;
+  svg {
+    width: 20px;
+
+    &:first-child {
+      margin-right: 60px;
+    }
+  }
+`;
+
 export const Home = () => {
   const [topics, setTopics] = useState();
 
   const cookies = new Cookies();
   let jwtToken = cookies.get("jwt");
   const userData = jwtToken ? parseJwt(jwtToken) : null;
+  const [editedData, setEditedData] = useState({ title: "" });
+  const [editClicked, setEditClicked] = useState({ value: false, index: null });
 
   useEffect(() => {
     const fetchData = async () =>
@@ -89,6 +105,8 @@ export const Home = () => {
 
     fetchData();
   }, []);
+
+  console.log(editClicked);
 
   return (
     <Layout>
@@ -106,33 +124,57 @@ export const Home = () => {
             {topics &&
               topics.map((topic, index) => (
                 <SingleTopicContainer>
-                  <Link key={index} to={`/kategorijos/${topic.id}`}>
-                    <div>
-                      <span>{topic.title}</span>
-                    </div>
+                  <Link
+                    key={index}
+                    to={editClicked.value ? "#" : `/kategorijos/${topic.id}`}
+                  >
+                    <EditTopic
+                      title={topic.title}
+                      editClicked={editClicked}
+                      index={index}
+                      setEditedData={setEditedData}
+                    />
                   </Link>
 
                   <SvgsContainer>
-                    {isButtonActive(topic, jwtToken) && (
-                      <EditDeleteButton
-                        onClick={() => deleteRequest(topic.id, 0, jwtToken)}
-                      >
-                        <DeleteSvg />
-                      </EditDeleteButton>
-                    )}
-                    {isButtonActive(topic, jwtToken) && (
-                      <EditDeleteButton
-                        onClick={() =>
-                          editRequest(
-                            topic.id,
-                            { title: "edita!" },
-                            0,
-                            jwtToken
-                          )
-                        }
-                      >
-                        <EditSvg />
-                      </EditDeleteButton>
+                    {editClicked.value && editClicked.index === index ? (
+                      <EditButtons>
+                        <ConfirmSvg
+                          onClick={() =>
+                            editRequest(topic.id, editedData, 0, jwtToken)
+                          }
+                        />
+                        <CancelSvg
+                          onClick={() =>
+                            setEditClicked({
+                              value: false,
+                              index: null,
+                            })
+                          }
+                        />
+                      </EditButtons>
+                    ) : (
+                      <>
+                        {isButtonActive(topic, jwtToken) && (
+                          <EditDeleteButton
+                            onClick={() => deleteRequest(topic.id, 0, jwtToken)}
+                          >
+                            <DeleteSvg />
+                          </EditDeleteButton>
+                        )}
+                        {isButtonActive(topic, jwtToken) && (
+                          <EditDeleteButton
+                            onClick={() =>
+                              setEditClicked({
+                                value: true,
+                                index: index,
+                              })
+                            }
+                          >
+                            <EditSvg />
+                          </EditDeleteButton>
+                        )}
+                      </>
                     )}
                     {!isButtonActive(topic, jwtToken) && <ArrowRightSvg />}
                   </SvgsContainer>

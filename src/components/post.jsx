@@ -84,7 +84,7 @@ const Post = () => {
   const postId = getPostId();
 
   const POST_COMMENTS_API = `https://onvet.herokuapp.com/api/posts/${postId}/comments`;
-  const TOPIC_API = `https://onvet.herokuapp.com/api/posts/${topicId}`;
+  const TOPIC_API = `https://onvet.herokuapp.com/api/posts/${postId}`;
 
   useEffect(() => {
     const fetchCommentsData = async () =>

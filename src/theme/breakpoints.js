@@ -6,7 +6,7 @@ const breakpoints = {
   xl: "1200px",
   xl_1350: "1350px",
   xxl: "1420px",
-}
+};
 
 // Usage:
 // ${mediaQuery('md')} {
@@ -16,4 +16,4 @@ const breakpoints = {
 export const mediaQuery = (key, type = "max", customSize) =>
   `@media (${type}-width: ${
     customSize && !key ? customSize : breakpoints[key]
-  })`
+  })`;

@@ -37,6 +37,7 @@ const Logo = styled(Link)`
   align-items: center;
   span {
     color: #f4e140;
+    font-family: "Marcellus SC", serif;
   }
   svg {
     width: 50px;

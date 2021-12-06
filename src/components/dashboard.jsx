@@ -32,7 +32,7 @@ export const Dashboard = ({ setIsLoggedIn, cookies }) => {
           {userData.role === "1" ? <h4>Administratorius</h4> : <h4>Svecias</h4>}
         </>
       )}
-      <button onClick={logout}>Logout</button>
+      <button onClick={logout}>Atsijungti</button>
     </Container>
   );
 };

@@ -8,6 +8,7 @@ import { CreateComment } from "./creates/create-comment";
 import { Container } from "../theme/helpers";
 import styled from "styled-components";
 import Cookies from "universal-cookie/es6";
+import { EditComment } from "./edits/edit-comment";
 
 const PostContainer = styled.div`
   margin: 30px 0;
@@ -64,6 +65,8 @@ const Post = () => {
   const location = useLocation();
   const [commentsData, setCommentsData] = useState(null);
   const [postData, setPostData] = useState(null);
+  const [editedData, setEditedData] = useState({ comment_text: "" });
+  const [editClicked, setEditClicked] = useState({ value: false, index: null });
   const cookies = new Cookies();
   let jwtToken = cookies.get("jwt");
 
@@ -111,27 +114,58 @@ const Post = () => {
                     <span>{comment.author_name}</span>
                   </CircleContainer>
                   <div>
-                    <h4>{comment.comment_text}</h4>
-                    {isButtonActive(comment, jwtToken) && (
-                      <button
-                        onClick={() => deleteRequest(comment.id, 2, jwtToken)}
-                      >
-                        Istrinti
-                      </button>
-                    )}
-                    {isButtonActive(comment, jwtToken) && (
-                      <button
-                        onClick={() =>
-                          editRequest(
-                            comment.id,
-                            { comment_text: "edita!" },
-                            2,
-                            jwtToken
-                          )
-                        }
-                      >
-                        Redaguoti
-                      </button>
+                    {/* <h4>{comment.comment_text}</h4> */}
+                    <EditComment
+                      comment_text={comment.comment_text}
+                      index={index}
+                      editClicked={editClicked}
+                      setEditedData={setEditedData}
+                    />
+
+                    {editClicked.value && editClicked.index === index ? (
+                      <div>
+                        <button
+                          onClick={() =>
+                            editRequest(comment.id, editedData, 2, jwtToken)
+                          }
+                        >
+                          Patvirtinti
+                        </button>
+                        <button
+                          onClick={() =>
+                            setEditClicked({
+                              value: false,
+                              index: null,
+                            })
+                          }
+                        >
+                          Atsaukti
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        {isButtonActive(comment, jwtToken) && (
+                          <button
+                            onClick={() =>
+                              deleteRequest(comment.id, 2, jwtToken)
+                            }
+                          >
+                            Istrinti
+                          </button>
+                        )}
+                        {isButtonActive(comment, jwtToken) && (
+                          <button
+                            onClick={() =>
+                              setEditClicked({
+                                value: true,
+                                index: index,
+                              })
+                            }
+                          >
+                            Redaguoti
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 </li>

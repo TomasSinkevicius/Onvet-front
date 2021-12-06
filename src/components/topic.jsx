@@ -14,6 +14,7 @@ import { Container } from "../theme/helpers";
 import styled from "styled-components";
 import Cookies from "universal-cookie/es6";
 import { ReactComponent as ArrowRightSvg } from "../images/arrow-right.svg";
+import { EditPost } from "./edits/edit-post";
 
 const TopicContainer = styled.div`
   margin: 30px 0;
@@ -106,6 +107,8 @@ const Topic = () => {
   const pathname = location.pathname;
   const [postsData, setPostsData] = useState({ data: null, isLoading: true });
   const [topicData, setTopicData] = useState(null);
+  const [editedData, setEditedData] = useState({ title: "", content: "" });
+  const [editClicked, setEditClicked] = useState({ value: false, index: null });
 
   const cookies = new Cookies();
   let jwtToken = cookies.get("jwt");
@@ -151,39 +154,68 @@ const Topic = () => {
                     <span>{post.author_name}</span>
                   </CircleContainer>
                   <Content>
-                    <LinkContainer to={`${slugify(post.title)}-${post.id}`}>
+                    <LinkContainer
+                      to={
+                        editClicked.value
+                          ? "#"
+                          : `${slugify(post.title)}-${post.id}`
+                      }
+                    >
                       <ArrowContainer>
-                        <div>
-                          <h4>{post.title}</h4>
-                          <p>{post.content}</p>
-                        </div>
+                        <EditPost
+                          title={post.title}
+                          content={post.content}
+                          index={index}
+                          editClicked={editClicked}
+                          setEditedData={setEditedData}
+                        />
                         <ArrowRightSvg />
                       </ArrowContainer>
                     </LinkContainer>
 
-                    <div>
-                      {isButtonActive(post, jwtToken) && (
-                        <button
-                          onClick={() => deleteRequest(post.id, 1, jwtToken)}
-                        >
-                          Istrinti
-                        </button>
-                      )}
-                      {isButtonActive(post, jwtToken) && (
+                    {editClicked.value && editClicked.index === index ? (
+                      <div>
                         <button
                           onClick={() =>
-                            editRequest(
-                              post.id,
-                              { title: "edita!", content: "content" },
-                              1,
-                              jwtToken
-                            )
+                            editRequest(post.id, editedData, 1, jwtToken)
                           }
                         >
-                          Redaguoti
+                          Patvirtinti
                         </button>
-                      )}
-                    </div>
+                        <button
+                          onClick={() =>
+                            setEditClicked({
+                              value: false,
+                              index: null,
+                            })
+                          }
+                        >
+                          Atsaukti
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        {isButtonActive(post, jwtToken) && (
+                          <button
+                            onClick={() => deleteRequest(post.id, 1, jwtToken)}
+                          >
+                            Istrinti
+                          </button>
+                        )}
+                        {isButtonActive(post, jwtToken) && (
+                          <button
+                            onClick={() =>
+                              setEditClicked({
+                                value: true,
+                                index: index,
+                              })
+                            }
+                          >
+                            Redaguoti
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </Content>
                 </li>
               ))}

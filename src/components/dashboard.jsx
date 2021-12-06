@@ -19,8 +19,8 @@ export const Dashboard = ({ setIsLoggedIn, cookies }) => {
       })
       .catch((error) => {
         console.log("err", error);
-        // window.location = "/";
-        // cookies.remove("jwt");
+        window.location = "/";
+        cookies.remove("jwt");
       });
   };
 

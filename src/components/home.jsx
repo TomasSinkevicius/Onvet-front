@@ -21,6 +21,7 @@ import { ReactComponent as ArrowRightSvg } from "../images/arrow-right.svg";
 import { ReactComponent as ConfirmSvg } from "../images/confirm.svg";
 import { ReactComponent as CancelSvg } from "../images/cancel.svg";
 import { EditTopic } from "./edits/edit-topic";
+import { ReactComponent as CreateSvg } from "../images/create.svg";
 
 const TopicsContainer = styled.div`
   display: flex;
@@ -31,7 +32,12 @@ const TopicsContainer = styled.div`
 const TopicsTopContainer = styled.div`
   margin-top: 40px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+
+  svg {
+    width: 35px;
+    cursor: pointer;
+  }
 `;
 
 const SingleTopicContainer = styled.li`
@@ -90,6 +96,7 @@ const EditButtons = styled.div`
 
 export const Home = () => {
   const [topics, setTopics] = useState();
+  const [createActive, setCreateActive] = useState(false);
 
   const cookies = new Cookies();
   let jwtToken = cookies.get("jwt");
@@ -116,7 +123,15 @@ export const Home = () => {
           <TopicsTopContainer>
             <h1>Kategorijos</h1>
             {userData && userData.role === "1" && (
-              <CreateTopic jwt={jwtToken} />
+              <>
+                <CreateSvg onClick={() => setCreateActive(!createActive)} />
+                {createActive && (
+                  <CreateTopic
+                    jwt={jwtToken}
+                    setCreateActive={setCreateActive}
+                  />
+                )}
+              </>
             )}
           </TopicsTopContainer>
 

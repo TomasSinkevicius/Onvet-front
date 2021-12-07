@@ -7,6 +7,10 @@ const Input = styled.input`
   color: #18191f;
   border: none;
   font-style: italic;
+  width: 90%;
+
+  border: 2px solid red;
+  border-radius: 4px;
 `;
 
 export const EditTopic = ({ title, editClicked, index, setEditedData }) => {

@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie/es6";
 import styled from "styled-components";
 import { parseJwt } from "../../utils/functions";
 import { ReactComponent as DogSvg } from "../../images/dog.svg";
+import { Burger } from "../burger/Burger";
+import { Menu } from "../menu";
+import { mediaQuery } from "../../theme/breakpoints";
 
 const HeaderContainer = styled.div`
   height: 80px;
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.9);
   position: absolute;
   top: 0;
@@ -32,9 +36,15 @@ const HeaderContainer = styled.div`
   }
 `;
 
+const HeaderLeftSide = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Logo = styled(Link)`
   display: flex;
   align-items: center;
+  z-index: 3;
   span {
     color: #f4e140;
     font-family: "Marcellus SC", serif;
@@ -50,24 +60,41 @@ const Logo = styled(Link)`
     opacity: 0.7;
   }
 `;
+const LeftSideLinks = styled.div`
+  ${mediaQuery("sm")} {
+    display: none;
+  }
+`;
 
 export const Header = () => {
+  const [open, setOpen] = useState(false);
   const cookies = new Cookies();
   let jwtToken = cookies.get("jwt") ? cookies.get("jwt") : null;
   const userData = jwtToken ? parseJwt(jwtToken) : null;
 
   return (
     <HeaderContainer>
-      <Logo to="/">
-        <DogSvg />
-        <span>OnVet</span>
-      </Logo>
-      <Link to="/">Namai</Link>
-      {userData ? (
-        <Link to="/mano-paskyra">Sveiki, {userData.username}!</Link>
-      ) : (
-        <Link to="/mano-paskyra">Prisijungti</Link>
-      )}
+      <HeaderLeftSide>
+        <Logo
+          to="/"
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
+          <DogSvg />
+          <span>OnVet</span>
+        </Logo>
+        <LeftSideLinks>
+          <Link to="/">Namai</Link>
+          {userData ? (
+            <Link to="/mano-paskyra">Sveiki, {userData.username}!</Link>
+          ) : (
+            <Link to="/mano-paskyra">Prisijungti</Link>
+          )}
+        </LeftSideLinks>
+        <Menu setOpen={setOpen} open={open} jwtToken={jwtToken} />
+      </HeaderLeftSide>
+      <Burger open={open} setOpen={setOpen} />
     </HeaderContainer>
   );
 };

@@ -2,47 +2,99 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../input";
 import axios from "axios";
 import { create } from "../../utils/functions";
-import { ReactComponent as CreateSvg } from "../../images/create.svg";
+import { ReactComponent as ArrowSvg } from "../../images/arrow.svg";
+import { ReactComponent as CatSvg } from "../../images/cat.svg";
 import styled from "styled-components";
-
-const CreateButton = styled.button`
-  background: transparent;
-  border: none;
-  cursor: pointer;
-
-  svg {
-    width: 35px;
-  }
-`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
 
   button {
+    padding: 12px 30px;
     background: #4a74eb;
-    border: 1px solid #4a74eb;
-    padding: 10px 20px;
-    color: white;
-    border-radius: 20px;
+    border-radius: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
 
+    svg {
+      margin-left: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    span {
+      font-size: 16px;
+      line-height: 22px;
+      color: white;
+      width: max-content;
+    }
+
     &:hover {
-      opacity: 0.7;
+      opacity: 0.8;
+      svg {
+        transform: rotate(20deg);
+      }
     }
   }
 
   input {
-    border-radius: 8px;
     padding: 4px;
-    border: 2px solid #c2c3c7;
+    border: none;
+    border: 1px solid #4a74eb;
     width: 208px;
     margin: 16px 0;
+    font-size: 16px;
+
+    &:focus {
+      outline: 2px solid #4a74eb;
+    }
   }
 `;
 
-export const CreateTopic = ({ jwt }) => {
+const Container = styled.div`
+  position: fixed;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  border-radius: 20px;
+  padding: 30px 30px 30px;
+  box-shadow: 0 0 15px black;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const CatImage = styled.div`
+  svg {
+    width: 80px !important;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  border: none;
+  background: transparent;
+  font-weight: 500;
+  font-size: 25px;
+  cursor: pointer;
+
+  &:hover {
+    color: #ff714b;
+  }
+`;
+
+export const CreateTopic = ({ jwt, setCreateActive }) => {
   const [topicDetails, setTopicDetails] = useState({
     title: "",
   });
@@ -63,22 +115,22 @@ export const CreateTopic = ({ jwt }) => {
     });
   };
   return (
-    <div>
-      <CreateButton onClick={() => setVisible(!visible)}>
-        <CreateSvg />
-      </CreateButton>
-      {visible && (
-        <div>
-          <Form onSubmit={onFormSubmit}>
-            <input
-              name="title"
-              placeholder="pavadinimas"
-              onChange={handleOnChange}
-            />
-            <button type="submit">Sukurti</button>
-          </Form>
-        </div>
-      )}
-    </div>
+    <Container>
+      <CloseButton onClick={() => setCreateActive(false)}>✘</CloseButton>
+      <CatImage>
+        <CatSvg />
+      </CatImage>
+      <h3>Sukurti kategoriją</h3>
+      <Form onSubmit={onFormSubmit}>
+        <input
+          name="title"
+          placeholder="pavadinimas"
+          onChange={handleOnChange}
+        />
+        <button type="submit">
+          <span>Sukurti</span> <ArrowSvg />
+        </button>
+      </Form>
+    </Container>
   );
 };

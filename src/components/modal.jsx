@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ReactComponent as DogSvg } from "../images/blue-dog.svg";
 
 const ModalContainer = styled.div`
-  position: absolute;
+  position: fixed;
   width: 320px;
   display: flex;
   flex-direction: column;
@@ -15,6 +15,9 @@ const ModalContainer = styled.div`
   padding: 30px 30px 70px;
   box-shadow: 0 0 15px black;
   z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   svg {
     width: 80px;

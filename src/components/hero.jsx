@@ -43,6 +43,7 @@ const Button = styled.div`
     font-size: 18px;
     line-height: 22px;
     color: white;
+    width: max-content;
   }
 
   &:hover {

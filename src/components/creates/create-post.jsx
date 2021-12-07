@@ -34,20 +34,25 @@ const Form = styled.form`
   }
 
   input {
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 4px;
     border: 2px solid #c2c3c7;
     width: 208px;
   }
 
   textarea {
-    width: 200px;
+    /* width: 200px; */
+    width: 100%;
     margin: 16px 0;
     height: 100px;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 8px;
     border: 2px solid #c2c3c7;
   }
+`;
+
+const Container = styled.div`
+  margin: 24px 0;
 `;
 
 export const CreatePost = ({ topicId, jwt }) => {
@@ -75,7 +80,7 @@ export const CreatePost = ({ topicId, jwt }) => {
     });
   };
   return (
-    <div>
+    <Container>
       <CreateButton onClick={() => setVisible(!visible)}>
         <CreateSvg />
       </CreateButton>
@@ -94,10 +99,10 @@ export const CreatePost = ({ topicId, jwt }) => {
               placeholder="Tekstas"
               onChange={handleOnChange}
             />
-            <button type="submit">Sukurti</button>
+            <button type="submit">Paskelbti!</button>
           </Form>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
